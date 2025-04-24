@@ -89,10 +89,7 @@ public class Stream_03_Test {
 	public void test_partitionning() throws Exception {
 		List<Pizza> pizzas = new Data().getPizzas();
 
-		// TODO Séparer la liste des pizzas en 2 ensembles :
-		// TODO true -> les pizzas dont le nom commence par "L"
-		// TODO false -> les autres
-		Map<Boolean, List<Pizza>> result = null;
+		Map<Boolean, List<Pizza>> result = pizzas.stream().collect(Collectors.partitioningBy(p -> p.getName().startsWith("L")));
 
 		assertThat(result.get(true), hasSize(6));
 		assertThat(result.get(false), hasSize(2));
