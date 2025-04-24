@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -15,36 +16,36 @@ import java17.data.Person;
 /**
  * Exercice 02 - Filter, Map
  */
-public class Optional_01_Test {
-	
-	class NotPresentException extends RuntimeException {
-		
-	}
+public class Optional_01_Test
+{
 
-    @Test
-    public void test_optional_ifPresent() throws Exception {
-    	
-    	List<Person> persons = Data.buildPersonList(100);
+    class NotPresentException extends RuntimeException
+    {
 
-        // TODO rechercher dans la liste ci-dessus la 1ère personne ayant 18 ans
-        // TODO utiliser la méthode "findFirst"
-        Optional<Person> optPerson = null;
-        assertThat(optPerson.isPresent(), is(true));
-        
-        // TODO afficher la personne en question si l'optional contient une personne
     }
 
-    @Test(expected=NotPresentException.class)
-    public void test_optional_notPresent() throws Exception {
-    	List<Person> persons = Data.buildPersonList(50);
+    @Test
+    public void test_optional_ifPresent() throws Exception
+    {
 
-        // TODO rechercher dans la liste ci-dessus la 1ère personne ayant 75 ans
-        // TODO utiliser la méthode "findFirst"
-        Optional<Person> optPerson = null;
+        List<Person> persons = Data.buildPersonList(100);
+
+        Optional<Person> optPerson = persons.stream().filter(person -> person.getAge() == 18).findFirst();
+        assertThat(optPerson.isPresent(), is(true));
+
+        optPerson.ifPresent(person -> System.out.println(optPerson.get().getFirstname() + " " + optPerson.get().getLastname()));
+    }
+
+    @Test(expected = NotPresentException.class)
+    public void test_optional_notPresent() throws Exception
+    {
+        List<Person> persons = Data.buildPersonList(50);
+
+        Optional<Person> optPerson = persons.stream().filter(person -> person.getAge() == 75).findFirst();
+
         assertThat(optPerson.isPresent(), is(false));
-        
-        // TODO si la personne n'existe pas, jeter une exception NotPresentException
-        // TODO utiliser la méthode "orElseThrow"
+
+        optPerson.orElseThrow(NotPresentException::new);
 
     }
 }
