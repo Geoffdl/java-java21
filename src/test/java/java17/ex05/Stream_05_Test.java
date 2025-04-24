@@ -13,32 +13,36 @@ import org.junit.Test;
 /**
  * Exercice 06 - Stream Parallel
  */
-public class Stream_05_Test {
+public class Stream_05_Test
+{
 
     private static final long NB = 10_000_000;
 
     // Soit une méthode impérative qui permet de construire une somme des chiffres de 1 à n
-    private long imperativeSum(long n) {
+    private long imperativeSum(long n)
+    {
         long result = 0;
 
-        for (long i = 1L; i < n; i++) {
+        for (long i = 1L; i < n; i++)
+        {
             result += i;
         }
         return result;
     }
 
-    // TODO compléter la méthode iterateSum
-    // TODO utiliser la méthode Stream.iterate
-    // TODO cette méthode doit produire le même résultat que imperativeSum
-    private long iterateSum(long n) {
-        return 0;
+    private long iterateSum(long n)
+    {
+        return Stream.iterate(1L, i -> i + 1).limit(n - 1).mapToLong(Long::longValue).sum();
+
+
     }
 
-    // TODO exécuter le test pour vérifier que les méthodes imperativeSum et iterateSum produisent le même résultat
     @Test
-    public void test_imperativeSum_vs_iterateSum() {
+    public void test_imperativeSum_vs_iterateSum()
+    {
 
-        Stream.of(1L, 1000L, NB).forEach(n -> {
+        Stream.of(1L, 1000L, NB).forEach(n ->
+        {
             long result1 = imperativeSum(n);
             long result2 = iterateSum(n);
 
@@ -49,15 +53,18 @@ public class Stream_05_Test {
     // TODO compléter la méthode parallelIterateSum
     // TODO utiliser la méthode Stream.iterate
     // TODO transformer en stream parallel (.parallel())
-    private long parallelIterateSum(long n) {
-        return 0;
+    private long parallelIterateSum(long n)
+    {
+        return Stream.iterate(1L, i -> i + 1).limit(n-1).mapToLong(Long::longValue).parallel().sum();
     }
 
     // TODO exécuter le test pour vérifier que les méthodes imperativeSum, iterateSum et parallelIterateSum produisent le même résultat
     @Test
-    public void test_imperativeSum_vs_iterateSum_vs_parallelIterateSum() {
+    public void test_imperativeSum_vs_iterateSum_vs_parallelIterateSum()
+    {
 
-        Stream.of(1L, 1000L, NB).forEach(n -> {
+        Stream.of(1L, 1000L, NB).forEach(n ->
+        {
             long result1 = imperativeSum(n);
             long result2 = iterateSum(n);
             long result3 = parallelIterateSum(n);
@@ -70,11 +77,13 @@ public class Stream_05_Test {
     // Essayons maintenant d'avoir une indication sur les performances des 3 traitements
 
     // Voici une méthode qui exécute 10 fois un traitement et retourne le meilleur temps (le plus court)
-    private long monitor(Consumer<Long> fn, long n) {
+    private long monitor(Consumer<Long> fn, long n)
+    {
 
         long fastest = Long.MAX_VALUE;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++)
+        {
             long start = System.nanoTime();
             fn.accept(n);
             long end = System.nanoTime();
@@ -87,7 +96,8 @@ public class Stream_05_Test {
     // TODO compléter le test pour invoquer la méthode monitor dans chaque cas
     // TODO visualiser les temps d'exécution
     @Test
-    public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum() {
+    public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum()
+    {
         Logger.getAnonymousLogger().info("imperativeSum => " + /* TODO */" ms");
         Logger.getAnonymousLogger().info("iterateSum => " + /* TODO */" ms");
         Logger.getAnonymousLogger().info("parallelIterateSum => " + /* TODO */ " ms");
@@ -103,15 +113,18 @@ public class Stream_05_Test {
 
     // TODO compléter la méthode rangeSum
     // TODO utiliser la méthode LongStream.rangeClosed
-    private long rangeSum(long n) {
+    private long rangeSum(long n)
+    {
         return 0;
     }
 
     // TODO vérifier que l'implémentation de rangeSum
     @Test
-    public void test_imperativeSum_vs_rangeSum() {
+    public void test_imperativeSum_vs_rangeSum()
+    {
 
-        Stream.of(1L, 20L, 1000L, NB).forEach(n -> {
+        Stream.of(1L, 20L, 1000L, NB).forEach(n ->
+        {
             long result1 = imperativeSum(n);
             long result2 = rangeSum(n);
 
@@ -122,15 +135,18 @@ public class Stream_05_Test {
     // TODO compléter la méthode rangeSum
     // TODO utiliser la méthode LongStream.rangeClosed
     // TODO transformer en stream parallel (.parallel())
-    private long rangeParallelSum(long n) {
+    private long rangeParallelSum(long n)
+    {
         return 0;
     }
 
     // TODO vérifier que l'implémentation de rangeParallelSum
     @Test
-    public void test_imperativeSum_vs_rangeSum_vs_rangeParallelSum() {
+    public void test_imperativeSum_vs_rangeSum_vs_rangeParallelSum()
+    {
 
-        Stream.of(1L, 20L, 1000L, NB).forEach(n -> {
+        Stream.of(1L, 20L, 1000L, NB).forEach(n ->
+        {
             long result1 = imperativeSum(n);
             long result2 = rangeSum(n);
             long result3 = rangeParallelSum(n);
@@ -141,7 +157,8 @@ public class Stream_05_Test {
     }
 
     @Test
-    public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum_vs_rangeSum_vs_rangeParallelSum() {
+    public void monitor_imperativeSum_vs_iterateSum_vs_parallelIterateSum_vs_rangeSum_vs_rangeParallelSum()
+    {
         Logger.getAnonymousLogger().info("imperativeSum => " + /* TODO */ " ms");
         Logger.getAnonymousLogger().info("iterateSum => " + /* TODO */ " ms");
         Logger.getAnonymousLogger().info("parallelIterateSum => " + /* TODO */ " ms");
