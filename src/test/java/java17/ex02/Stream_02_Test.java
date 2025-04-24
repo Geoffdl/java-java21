@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
@@ -16,77 +17,76 @@ import java17.data.domain.Order;
 /**
  * Exercice 02 - Transformation
  */
-public class Stream_02_Test {
+public class Stream_02_Test
+{
 
-	@Test
-	public void test_map() throws Exception {
+    @Test
+    public void test_map() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		// TODO Trouver la liste des clients associés aux commandes
-		List<Customer> result = null;
+        List<Customer> result = orders.stream().map(Order::getCustomer).toList();
 
-		assertThat(result, hasSize(8));
-	}
+        assertThat(result, hasSize(8));
+    }
 
-	@Test
-	public void test_map_count() throws Exception {
+    @Test
+    public void test_map_count() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		// TODO Compter le nombre de clients associés aux commandes
-		long result = 0;
+        long result = orders.stream().map(Order::getCustomer).count();
 
-		assertThat(result, is(8L));
-	}
+        assertThat(result, is(8L));
+    }
 
-	@Test
-	public void test_map_distinct() throws Exception {
+    @Test
+    public void test_map_distinct() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		// TODO Trouver la liste des différents clients associés aux commandes (sans doublons)
-		List<Customer> result = null;
+        List<Customer> result = orders.stream().map(Order::getCustomer).distinct().toList();
 
-		assertThat(result, hasSize(2));
-	}
+        assertThat(result, hasSize(2));
+    }
 
-	@Test
-	public void test_map_distinct_count() throws Exception {
+    @Test
+    public void test_map_distinct_count() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		// TODO Compter le nombre des différents clients associés aux commandes
-		long result = 0L;
+        long result = orders.stream().map(Order::getCustomer).distinct().count();
 
-		assertThat(result, is(2L));
-	}
+        assertThat(result, is(2L));
+    }
 
-	@Test
-	public void test_mapToDouble_sum() throws Exception {
+    @Test
+    public void test_mapToDouble_sum() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		/*
-		 * TODO Calculer le chiffre d'affaires total de la pizzeria (somme des prix des
-		 * commandes)
-		 */
-		double result = 0.0;
+        double result = orders.stream().map(Order::getPrice).reduce(0.0,(aDouble, aDouble2) -> aDouble + aDouble2);
 
-		assertThat(result, is(10900.0));
-	}
+        assertThat(result, is(10900.0));
+    }
 
-	@Test
-	public void test_mapToDouble_avg() throws Exception {
+    @Test
+    public void test_mapToDouble_avg() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		/*
-		 * TODO Calculer le prix moyen d'une commande
-		 */
-		OptionalDouble result = null;
+        /*
+         * TODO Calculer le prix moyen d'une commande
+         */
+        OptionalDouble result = orders.stream().mapToDouble(Order::getPrice).average();
 
-		assertThat(result.isPresent(), is(true));
-		assertThat(result.getAsDouble(), is(1362.5));
-	}
+        assertThat(result.isPresent(), is(true));
+        assertThat(result.getAsDouble(), is(1362.5));
+    }
 }
