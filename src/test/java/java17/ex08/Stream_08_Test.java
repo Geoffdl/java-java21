@@ -9,10 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -96,14 +93,15 @@ public class Stream_08_Test
     @Test
     public void test_max() throws IOException
     {
-
-        // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
         // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = null)
+        Path pathFile = Paths.get(NAISSANCES_DEPUIS_1900_CSV);
+
+        try (Stream<String> lines = Files.lines(pathFile))
         {
 
-            // TODO trouver l'année où il va eu le plus de nombre de naissance
-            Optional<Naissance> result = null;
+            Optional<Naissance> result = lines.skip(1).map(line -> line.split(";"))
+                    .map(parts -> new Naissance(parts[1], parts[2], parseInt(parts[3])))
+                    .max(Comparator.comparingInt(Naissance::getNombre));
 
 
             assertThat(result.get().getNombre(), is(48));
@@ -115,14 +113,19 @@ public class Stream_08_Test
     @Test
     public void test_collectingAndThen() throws IOException
     {
-        // TODO utiliser la méthode java.nio.file.Files.lines pour créer un stream de lignes du fichier naissances_depuis_1900.csv
-        // Le bloc try(...) permet de fermer (close()) le stream après utilisation
-        try (Stream<String> lines = null)
-        {
 
-            // TODO construire une MAP (clé = année de naissance, valeur = maximum de nombre de naissances)
-            // TODO utiliser la méthode "collectingAndThen" à la suite d'un "grouping"
-            Map<String, Naissance> result = null;
+        Path pathFile = Paths.get(NAISSANCES_DEPUIS_1900_CSV);
+
+        try (Stream<String> lines = Files.lines(pathFile))
+        {
+            Map<String, Naissance> result = lines
+                    .skip(1)
+                    .map(line -> line.split(";"))
+                    .map(parts -> new Naissance(parts[1], parts[2], parseInt(parts[3])))
+                    .collect(Collectors.groupingBy(
+                            Naissance::getAnnee,
+                            Collectors.collectingAndThen(
+                                    Collectors.maxBy(Comparator.comparingInt(Naissance::getNombre)), Optional::get)));
 
             assertThat(result.get("2015").getNombre(), is(38));
             assertThat(result.get("2015").getJour(), is("20150909"));
