@@ -59,6 +59,17 @@ public class Order {
 	}
 
 	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder("Order{");
+		sb.append("id=").append(id);
+		sb.append(", customer=").append(customer);
+		sb.append(", pizzas=").append(pizzas);
+		sb.append('}');
+		return sb.toString();
+	}
+
+	@Override
 	public int hashCode() {
 		return id != null ? id.hashCode() : 0;
 	}

@@ -39,6 +39,17 @@ public class Pizza {
 	}
 
 	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder("Pizza{");
+		sb.append("id=").append(id);
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", price=").append(price);
+		sb.append('}');
+		return sb.toString();
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;

@@ -19,79 +19,100 @@ import static org.junit.Assert.*;
 /**
  * Exercice 03 - Collectors
  */
-public class Stream_03_Test {
+public class Stream_03_Test
+{
 
-	@Test
-	public void test_max() throws Exception {
+    @Test
+    public void test_max() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		Optional<Order> result = orders.stream().max(Comparator.comparingDouble(Order::getPrice));
+        Optional<Order> result1 = orders.stream().max(Comparator.comparingDouble(Order::getPrice));
+        //the if else is included in comparingDouble
+        Optional<Order> result2 = orders.stream().max((o1, o2) ->
+        {
+            if (o1.getPrice() > o2.getPrice())
+            {
+                return 1;
+            } else if (o1.getPrice() < o2.getPrice())
+            {
+                return -1;
+            }
+            return 0;
 
-		assertThat(result.isPresent(), is(true));
-		assertThat(result.get().getPrice(), is(2200.0));
-	}
+        });
+        Optional<Order> result = orders.stream().max((o1, o2) -> Double.compare(o1.getPrice(), o2.getPrice()));
+        assertThat(result.isPresent(), is(true));
+        assertThat(result.get().getPrice(), is(2200.0));
+    }
 
-	@Test
-	public void test_min() throws Exception {
+    @Test
+    public void test_min() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		Optional<Order> result = orders.stream().min(Comparator.comparingDouble(Order::getPrice));
+        Optional<Order> result = orders.stream().min(Comparator.comparingDouble(Order::getPrice));
 
-		assertThat(result.isPresent(), is(true));
-		assertThat(result.get().getPrice(), is(1000.0));
-	}
+        assertThat(result.isPresent(), is(true));
+        assertThat(result.get().getPrice(), is(1000.0));
+    }
 
-	@Test
-	public void test_map_collect_joining() throws Exception {
+    @Test
+    public void test_map_collect_joining() throws Exception
+    {
 
-		List<Customer> customers = new Data().getCustomers();
+        List<Customer> customers = new Data().getCustomers();
 
-		String result = customers.stream().map(Customer::getFirstname).sorted().collect(Collectors.joining("|"));
+        String result = customers.stream().map(Customer::getFirstname).peek(System.out::println).sorted().peek(System.out::println).collect(Collectors.joining("|"));
 
-		assertThat(result, is("Alexandra|Cyril|Johnny|Marion|Sophie"));
-	}
+        assertThat(result, is("Alexandra|Cyril|Johnny|Marion|Sophie"));
+    }
 
-	@Test
-	public void test_flatMap() throws Exception {
+    @Test
+    public void test_flatMap() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		List<Pizza> result = orders.stream().flatMap(order -> order.getPizzas().stream()).toList();
+        List<Pizza> result = orders.stream().peek(System.out::println).flatMap(order -> order.getPizzas().stream().peek(System.out::println)).toList();
 
-		assertThat(result.size(), is(9));
-	}
+        assertThat(result.size(), is(9));
+    }
 
-	@Test
-	public void test_flatMap_distinct() throws Exception {
+    @Test
+    public void test_flatMap_distinct() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		List<Pizza> result = orders.stream().flatMap(order -> order.getPizzas().stream()).distinct().toList();
+        List<Pizza> result = orders.stream().flatMap(order -> order.getPizzas().stream()).distinct().toList();
 
-		assertThat(result.size(), is(4));
-	}
+        assertThat(result.size(), is(4));
+    }
 
-	@Test
-	public void test_grouping() throws Exception {
+    @Test
+    public void test_grouping() throws Exception
+    {
 
-		List<Order> orders = new Data().getOrders();
+        List<Order> orders = new Data().getOrders();
 
-		Map<Customer, List<Order>> result = orders.stream().collect(Collectors.groupingBy(Order::getCustomer));
+        Map<Customer, List<Order>> result = orders.stream().collect(Collectors.groupingBy(Order::getCustomer));
 
-		assertThat(result.size(), is(2));
-		assertThat(result.get(new Customer(1)), hasSize(4));
-		assertThat(result.get(new Customer(2)), hasSize(4));
-	}
+        assertThat(result.size(), is(2));
+        assertThat(result.get(new Customer(1)), hasSize(4));
+        assertThat(result.get(new Customer(2)), hasSize(4));
+    }
 
-	@Test
-	public void test_partitionning() throws Exception {
-		List<Pizza> pizzas = new Data().getPizzas();
+    @Test
+    public void test_partitionning() throws Exception
+    {
+        List<Pizza> pizzas = new Data().getPizzas();
 
-		Map<Boolean, List<Pizza>> result = pizzas.stream().collect(Collectors.partitioningBy(p -> p.getName().startsWith("L")));
+        Map<Boolean, List<Pizza>> result = pizzas.stream().collect(Collectors.partitioningBy(p -> p.getName().startsWith("L")));
 
-		assertThat(result.get(true), hasSize(6));
-		assertThat(result.get(false), hasSize(2));
-	}
+        assertThat(result.get(true), hasSize(6));
+        assertThat(result.get(false), hasSize(2));
+    }
 }
