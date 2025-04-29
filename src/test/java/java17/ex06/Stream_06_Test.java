@@ -61,8 +61,10 @@ public class Stream_06_Test {
         return acc.total;
     }
 
-    // TODO Exécuter le test
     // Que constatez-vous ?
+    /*
+    Le test échoue pour les plus grandes accumulations
+     */
     @Test
     public void test_sumWithAccumulatorParallel() throws Exception {
 
